@@ -11,11 +11,20 @@
 <body>
     <div class="container">
         <h1>Shopping List</h1>
+        <div class='forms'>
         <form id="js-shopping-list-form">
             <label for="shopping-list-entry">Add an item</label>
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
             <button type="submit">Add item</button>
         </form>
+    </div>
+    <div class = 'forms'>
+        <form id='js-shopping-list-search'>
+            <label for='shopping-list-search-item'>Search for items</label>
+            <input type='text' name='shopping-list-search-item' class='js-shopping-list-search-item' placeholder=''>
+            <button type='submit'>Search</button>
+        </form>
+    </div>
         <div class="filter-controls">
             <input type="checkbox" id="hide-completed-toggle" class="js-hide-completed-toggle" />
             <label for="hide-completed-toggle">Hide Completed</label>

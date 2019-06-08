@@ -7,9 +7,7 @@ const STORE = {
     {id: cuid(), name: 'milk', checked: true},
     {id: cuid(), name: 'bread', checked: false}
   ],
-  hideCompleted: false,
-  itemEdited: false,
-  listSearched: false
+  hideCompleted: false
 };
 
 function generateItemElement(item) {
@@ -41,27 +39,28 @@ function generateShoppingItemsString(shoppingList) {
 }
 
 
-function renderShoppingList() {
+function renderShoppingList(searchValue) {
   // render the shopping list in the DOM
   console.log('`renderShoppingList` ran');
 
-  // set up a variable of a store item that will reassign to a new item if the edit button for that item
-  // is clicked
+  let list = STORE.items;
+  if (searchValue != null) {
+    list = list.filter(item => item.name.includes(searchValue));
+  }
   
-
   // set up a copy of the store's items in a local variable that we will reassign to a new
   // version if any filtering of the list occurs
-  let filteredItems = STORE.items;
+  // let filteredItems = STORE.items;
 
   // if the `hideCompleted` property is true, then we want to reassign filteredItems to a version
   // where ONLY items with a "checked" property of false are included
   if (STORE.hideCompleted) {
-    filteredItems = filteredItems.filter(item => !item.checked);
+    list = list.filter(item => !item.checked);
   }
 
   // at this point, all filtering work has been done (or not done, if that's the current settings), so
   // we send our `filteredItems` into our HTML generation function 
-  const shoppingListItemsString = generateShoppingItemsString(filteredItems);
+  const shoppingListItemsString = generateShoppingItemsString(list);
 
   // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
@@ -148,39 +147,26 @@ word of) that text 'user-input'
 4. use that filtered STORE.items object list to be utilized through the renderlist: if a user 'submits' text, 
 render list will be run using the filtered STORE.items object
 5. renderShoppingList()
+*/
 
+function searchBar(){
+  $('#js-shopping-list-search').submit(function(event) {
+    event.preventDefault();
+    let searchValue = $(event.currentTarget).find('.js-shopping-list-search-item').val();
+    renderShoppingList(searchValue);
+  });
+}
+/*
 B. User can edit the title of an item 
 1. make the current item editable= add button called edit on click, create input form and clear the current
 the list item
 3. on submit, change the list item in STORE.items for the one with the closest matching ID
 4. render the list 
 */
-//toggles the STORE.itemEdited property
-// function toggleEditItem(){
-//   STORE.itemEdited = !STORE.hideCompleted;
-//}
-
-
-/* function editItem(){
-
-  $('.js-shopping-list').on('click', '.js-item-edit', event => {
-    let currentContent = $(event.currentTarget).parent().prev();
-    let edit = prompt('Edit Me', currentContent.text());
-    if (edit !== null) {
-      currentContent.text(edit);
-      console.log(currentContent.text());
-    }
-   
-  });
-} */
 
 ////actually editing the STORE.items item
 function editItem(itemId, editedText){
-
-  let itemToBeEdited = STORE.items.find(item => itemId === itemId);
-  itemToBeEdited.name = editedText;
-  console.log(itemToBeEdited);
-
+  STORE.items.find(item => item.id === itemId).name = editedText;
 }
 // when edit button is clicked, opens prompt window to edit text, and then runs edit item to change STORE
 function handleEditItem(){
@@ -207,6 +193,7 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleHideFilter();
+  searchBar();
   handleEditItem();
 
 }

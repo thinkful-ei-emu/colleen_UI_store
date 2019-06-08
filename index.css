@@ -6,6 +6,10 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.forms {
+  padding: 5px;
+}
+
 button, input[type="text"] {
   padding: 5px;
 }
