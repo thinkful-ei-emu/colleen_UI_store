@@ -39,13 +39,13 @@ function generateShoppingItemsString(shoppingList) {
 }
 
 
-function renderShoppingList(searchValue) {
+function renderShoppingList() {
   // render the shopping list in the DOM
   console.log('`renderShoppingList` ran');
 
   let list = STORE.items;
-  if (searchValue != null) {
-    list = list.filter(item => item.name.includes(searchValue));
+  if (STORE.searchValue != null) {
+    list = list.filter(item => item.name.includes(STORE.searchValue));
   }
   
   // set up a copy of the store's items in a local variable that we will reassign to a new
@@ -69,7 +69,7 @@ function renderShoppingList(searchValue) {
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.items.push({name: itemName, checked: false});
+  STORE.items.push({id: cuid(), name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
@@ -152,8 +152,10 @@ render list will be run using the filtered STORE.items object
 function searchBar(){
   $('#js-shopping-list-search').submit(function(event) {
     event.preventDefault();
-    let searchValue = $(event.currentTarget).find('.js-shopping-list-search-item').val();
-    renderShoppingList(searchValue);
+    STORE.searchValue = $(event.currentTarget).find('.js-shopping-list-search-item').val();
+    renderShoppingList();
+  
+
   });
 }
 /*
@@ -170,8 +172,9 @@ function editItem(itemId, editedText){
 }
 // when edit button is clicked, opens prompt window to edit text, and then runs edit item to change STORE
 function handleEditItem(){
-  console.log('handleEditItem runs');
+  
   $('.js-shopping-list').on('click', '.js-item-edit', event => {
+    console.log('handleEditItem runs');
     let currentContent = $(event.currentTarget).parent().prev();
     let editedText = prompt('Edit Me', currentContent.text());
     let itemId = getItemIdFromElement(currentContent);
